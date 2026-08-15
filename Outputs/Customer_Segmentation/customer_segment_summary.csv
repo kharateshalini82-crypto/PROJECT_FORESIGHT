@@ -1,0 +1,4 @@
+CustomerSegment,CustomerCount,TotalSales,TotalQuantity,TotalOrders,AverageCustomerSales,SalesContributionPercent
+High Value,645,11405400.1,6929612,16579,17682.79,65.64
+Low Value,3173,1334802.46,811271,6372,420.68,7.68
+Medium Value,2060,4634601.71,2773069,14021,2249.81,26.67
