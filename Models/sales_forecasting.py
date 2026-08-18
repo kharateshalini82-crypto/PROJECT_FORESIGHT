@@ -4,12 +4,6 @@ import os
 
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from sklearn.metrics import mean_absolute_error, mean_squared_error
-
-
-# ============================================================
-# PROJECT FORESIGHT - SALES FORECASTING
-# ============================================================
-
 input_file = "data/processed/feature_engineered_data.csv"
 
 forecast_output = "Outputs/forecast_results.csv"
@@ -21,12 +15,6 @@ print("Loading feature-engineered dataset...")
 df = pd.read_csv(input_file)
 
 print(f"Rows loaded: {len(df)}")
-
-
-# ============================================================
-# 1. PREPARE MONTHLY SALES DATA
-# ============================================================
-
 df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
 
 monthly_sales = (
@@ -47,23 +35,9 @@ print("\nMonthly sales data prepared.")
 
 print(f"Number of months: {len(monthly_sales)}")
 
-
-# ============================================================
-# 2. DISPLAY HISTORICAL SALES
-# ============================================================
-
 print("\n========== HISTORICAL MONTHLY SALES ==========")
 
 print(monthly_sales)
-
-
-# # ============================================================
-# 3. TRAIN / TEST SPLIT
-# ============================================================
-
-# Keep the last 1 month for testing
-# Holt-Winters with yearly seasonality (12 months)
-# requires at least 24 months of training data.
 
 train = monthly_sales.iloc[:-1]
 
@@ -73,11 +47,6 @@ print("\n========== TRAIN / TEST SPLIT ==========")
 
 print(f"Training months: {len(train)}")
 print(f"Testing months: {len(test)}")
-
-
-# ============================================================
-# 4. BUILD HOLT-WINTERS MODEL
-# ============================================================
 
 print("\nTraining Holt-Winters forecasting model...")
 
@@ -94,19 +63,9 @@ fitted_model = model.fit(
 
 print("Forecasting model trained successfully.")
 
-
-# ============================================================
-# 5. PREDICT TEST PERIOD
-# ============================================================
-
 test_predictions = fitted_model.forecast(len(test))
 
 test_predictions.index = test.index
-
-
-# ============================================================
-# 6. MODEL EVALUATION
-# ============================================================
 
 mae = mean_absolute_error(
     test["Sales"],
@@ -133,12 +92,6 @@ print("\n========== MODEL EVALUATION ==========")
 print(f"MAE  : {mae:.2f}")
 print(f"RMSE : {rmse:.2f}")
 print(f"MAPE : {mape:.2f}%")
-
-
-# ============================================================
-# 7. TRAIN FINAL MODEL ON COMPLETE DATA
-# ============================================================
-
 print("\nTraining final model on complete dataset...")
 
 final_model = ExponentialSmoothing(
@@ -151,12 +104,6 @@ final_model = ExponentialSmoothing(
 final_fitted_model = final_model.fit(
     optimized=True
 )
-
-
-# ============================================================
-# 8. FORECAST NEXT 6 MONTHS
-# ============================================================
-
 forecast_periods = 6
 
 future_forecast = final_fitted_model.forecast(
@@ -166,11 +113,6 @@ future_forecast = final_fitted_model.forecast(
 print("\n========== FUTURE SALES FORECAST ==========")
 
 print(future_forecast)
-
-
-# ============================================================
-# 9. CREATE FORECAST DATAFRAME
-# ============================================================
 
 forecast_df = future_forecast.reset_index()
 
@@ -187,35 +129,18 @@ forecast_df["ForecastSales"] = forecast_df[
     "ForecastSales"
 ].round(2)
 
-
-# ============================================================
-# 10. SAVE FORECAST RESULTS
-# ============================================================
-
 os.makedirs("Outputs", exist_ok=True)
 
 forecast_df.to_csv(
     forecast_output,
     index=False
 )
-
-
-# ============================================================
-# 11. SAVE MODEL
-# ============================================================
-
 import joblib
 
 joblib.dump(
     final_fitted_model,
     model_output
 )
-
-
-# ============================================================
-# 12. FINAL OUTPUT
-# ============================================================
-
 print("\n==========================================")
 print("FORECASTING COMPLETED SUCCESSFULLY!")
 print("==========================================")
