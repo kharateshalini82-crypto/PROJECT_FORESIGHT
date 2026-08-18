@@ -120,6 +120,13 @@ This dashboard shows:
 * Sales by country
 * Sales forecast
 
+### Dashboard Preview
+
+![PROJECT FORESIGHT Power BI Dashboard](Outputs/Dashboard/dashboard_preview.png)
+
+The dashboard provides an interactive visual view of the project's key business metrics, sales trends, product performance, country-wise sales, customer information, and sales forecasting results.
+
+
 ## Technology Used
 
 ### Programming Language
